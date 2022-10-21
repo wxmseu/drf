@@ -1,11 +1,11 @@
 class Animal(object):
-    def __init__(self, name, age, func_str):
+    def __init__(self, name, age):
         self.name = name
         self.age = age
         # self.sleep()
         # 反射
-        func = getattr(self, func_str)
-        func()
+        # func = getattr(self, func_str)
+        # func()
 
     def sleep(self):
         print('睡觉了')
@@ -27,6 +27,10 @@ class Fly():
 class Bird(Animal,Fly):
     pass
 
-person = Dog('jdq', 19, 'sleep')
-bird=Bird('wxm',34,'sleep')
-bird.fly()
+# person = Dog('jdq', 19, 'sleep')
+# bird=Bird('wxm',34,'sleep')
+# bird.fly()
+list=[Animal('2',3),Dog('2',3),Bird('2',3)]
+l1=[auth() for auth in list]
+print(l1)
+from rest_framework.authentication import SessionAuthentication

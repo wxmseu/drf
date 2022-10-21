@@ -14,10 +14,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path,re_path
+from django.urls import path, re_path
 from book.views import BookView
-from sers.views import Book#,BookDetailView
-from sers.views import one,all
+from sers.views import Book  # ,BookDetailView
+
+# 路由组件
+from rest_framework import routers
+
+# 文档路由
+from rest_framework.documentation import include_docs_urls
+
+router = routers.DefaultRouter()
+router.register('sers/book', Book)
 urlpatterns = [
     path('admin/', admin.site.urls),
     # path('book/', views.book),
@@ -25,6 +33,8 @@ urlpatterns = [
     # path('book/', BookView.as_view()),
     # path('sers/book/', Book.as_view()),
     # path('sers/book/<int:pk>', BookDetailView.as_view()),
-    path('sers/book/', Book.as_view(all)),
-    re_path(r'sers/book/(?P<id>\d+)', Book.as_view(one)),
+    # path('sers/book/', Book.as_view(all)),
+    # re_path(r'sers/book/(?P<id>\d+)', Book.as_view(one)),
+    path('docs/', include_docs_urls(title='站点页面标题'))
 ]
+urlpatterns += router.urls

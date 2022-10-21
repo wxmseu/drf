@@ -186,33 +186,67 @@ class BooksSerilizers(serializers.ModelSerializer):
 #     def delete(self, request,id):
 #         return Response('delete')
 # ---------------------------GenericViewSet类：重构分发机制且继承GenericView-----------------------------------------#
+#
+# from rest_framework.viewsets import GenericViewSet
+# from rest_framework.mixins import ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, \
+#     DestroyModelMixin
+#
+# all = {
+#     'get': 'list',
+#     'post': 'create'
+# }
+#
+# one = {
+#     'get': 'retrieve',
+#     'put': 'update',
+#     'delete': 'destroy'
+# }
+#
+#
+# class Book(GenericViewSet, ListModelMixin, CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin):
+#     queryset = BookView.objects.all()
+#     serializer_class = BooksSerilizers
+#     lookup_field = 'id'
+# ---------------------------ModelViewSet类：重构分发机制且继承GenericView,ListModelMixin, CreateModelMixin,
+# RetrieveModelMixin, UpdateModelMixin, DestroyModelMixin-----------------------------------------#
+# from rest_framework.viewsets import ModelViewSet
+#
+# all = {
+#     'get': 'list',
+#     'post': 'create'
+# }
+#
+# one = {
+#     'get': 'retrieve',
+#     'put': 'update',
+#     'delete': 'destroy'
+# }
+#
+#
+# class Book(ModelViewSet):
+#     queryset = BookView.objects.all()
+#     serializer_class = BooksSerilizers
+#     lookup_field = 'id'
+# # ---------------------------采用路由组件后-----------------------------------------#
+from rest_framework.viewsets import ModelViewSet
+from rest_framework.authentication import BasicAuthentication
+from rest_framework import exceptions
 
-from rest_framework.viewsets import GenericViewSet
 
-all = {
-    'get': 'get_all',
-    'post': 'add'
-}
+class MyAuthentication(object):
+    def authenticate(self, request):
+        token = request._request.GET.get('token')
+        if not token:
+            raise exceptions.AuthenticationFailed('验证失败')
+        return ('wxm', None)
 
-one = {
-    'get': 'get_obj',
-    'put': 'update',
-    'delete': 'delete'
-}
+    def authenticate_header(self, request):
+        pass
 
 
-class Book(GenericViewSet):
-    def get_all(self, request):
-        return Response('get all')
-
-    def add(self, request):
-        return Response('add')
-
-    def get_obj(self, request,id):
-        return Response('get one')
-
-    def update(self, request,id):
-        return Response('update')
-
-    def delete(self, request,id):
-        return Response('delete')
+class Book(ModelViewSet):
+    # 认证
+    authentication_classes = [MyAuthentication, ]
+    queryset = BookView.objects.all()
+    serializer_class = BooksSerilizers
+    lookup_field = 'id'
