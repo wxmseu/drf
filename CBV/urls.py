@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, re_path
+from django.urls import path, include, re_path
 from book.views import BookView
 from sers.views import Book  # ,BookDetailView
 
@@ -35,6 +35,9 @@ urlpatterns = [
     # path('sers/book/<int:pk>', BookDetailView.as_view()),
     # path('sers/book/', Book.as_view(all)),
     # re_path(r'sers/book/(?P<id>\d+)', Book.as_view(one)),
-    path('docs/', include_docs_urls(title='站点页面标题'))
+    path('docs/', include_docs_urls(title='站点页面标题')),
+
+    # api
+    path('api/', include('api.urls')),
 ]
 urlpatterns += router.urls
